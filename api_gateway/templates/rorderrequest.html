@@ -1,0 +1,74 @@
+{% extends "jbase.html" %}
+{% block body %}
+    {% with %}  
+        {% if data %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>request</th>
+                        <th>Button</th>
+                    </tr>
+                </thead>
+            {% for message in data %}
+                <tbody>
+                  <tr id="{{ message['_nid'] }}">
+                    <td>
+                        <div style="height: 150px; width: 600px;">
+                            <p>description: {{ message['description'] }}</p>
+                        </div>
+                    </td>
+                    <td><input type="button" value="Accept" onclick="Accept()" /></td>
+                    <td><input type="button" value="Reject" onclick="Reject()" /></td>
+                  </tr>
+                </tbody>
+            {% endfor %} 
+            </table>   
+        {% endif %}  
+    {% endwith %}
+{% endblock %}
+{% block scripts %}
+    <script>
+        const Accept = () =>{
+            var rowId = event.target.parentNode.parentNode.id;
+            console.log(rowId);
+            // create own form in memory
+            const formData = new FormData();
+
+            // set values in this form
+            formData.append("button", rowId);
+            formData.append("status", "accepted")
+
+            fetch("/rorderrequest", {
+                method: "POST",
+                body: formData
+                //headers: {'Content-Type': 'application/json'},
+                //body: JSON.stringify(formData)
+            }).then((response) =>{
+                return response.json()
+            }).then((data) =>{
+                window.location.href=data.redirect
+            })
+            }
+        const Reject = () =>{
+            var rowId = event.target.parentNode.parentNode.id;
+            console.log(rowId);
+            // create own form in memory
+            const formData = new FormData();
+
+            // set values in this form
+            formData.append("button", rowId);
+            formData.append("status", "rejected")
+
+            fetch("/rorderrequest", {
+                method: "POST",
+                body: formData
+                //headers: {'Content-Type': 'application/json'},
+                //body: JSON.stringify(formData)
+            }).then((response) =>{
+                return response.json()
+            }).then((data) =>{
+                window.location.href=data.redirect
+            })
+            }
+    </script>
+{% endblock %}

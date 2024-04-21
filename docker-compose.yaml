@@ -1,0 +1,79 @@
+version: '3.1'
+services:
+    notify_service:
+      build: 
+        context: ./notification_service
+        dockerfile: Dockerfile
+      restart: always
+      ports:
+        - 7000:7000
+      depends-on:
+        - rabbitmq
+      env_file:
+        ./notification_service/.env
+      networks: 
+        - my-net
+
+    api_gateway:
+      build:
+        context: ./api_gateway
+        dockerfile: Dockerfile
+      restart: always
+      ports:
+        - 80:80
+      env_file:
+        ./api_gateway/.env
+      networks:
+        - my-net
+
+    auth_service:
+      build:
+        context: ./auth_service
+        dockerfile: Dockerfile
+      restart: always
+      ports:
+        - 8000:8000
+      env_file:
+        ./auth_service/.env
+      networks:
+        - my-net
+
+    order_service:
+      build: 
+        context: ./order
+        dockerfile: Dockerfile
+      restart: always
+      depends_on:
+        - rabbitmq
+      ports:
+        - 8081:8081
+      env_file:
+        ./order/.env
+      networks:
+        - my-net
+
+    store_service:
+      build:
+        context: ./store
+        dockerfile: Dockerfile
+      restart: always
+      ports:
+        - 8080:8080
+      env_file:
+        ./store/.env
+      networks:
+        - my-net
+
+    rabbitmq:
+      image: rabbitmq:3-management
+      restart: always
+      ports:
+        - 15672:15672
+        - 5672:5672
+      networks:
+        - my-net
+
+networks:
+    my-net:
+      driver: bridge
+    

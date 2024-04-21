@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+    {% with %}  
+        {% if data %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>request</th>
+                        <th>Button</th>
+                    </tr>
+                </thead>
+            {% for message in data %}
+                <tbody>
+                  <tr id="{{ message['_nid'] }}">
+                    <td>
+                        <div style="height: 150px; width: 600px;">
+                            <p>email: {{ message['email'] }}</p>
+                            <p>description: {{ message['description'] }}</p>
+                            <p>making_charges: {{ message['making_charges'] }}</p>
+                            <p>owned_by: {{ message['owned_by'] }}</p>
+                        </div>
+                    </td>
+                    <td><input type="button" value="Cancel" onclick="Cancel()" /></td>
+                  </tr>
+                </tbody>
+            {% endfor %} 
+            </table>   
+        {% endif %}  
+    {% endwith %}
+{% endblock %}
+{% block scripts %}
+    <script>
+        const Cancel = () =>{
+            var rowId = event.target.parentNode.parentNode.id;
+            console.log(rowId);
+            // create own form in memory
+            const formData = new FormData();
+
+            // set values in this form
+            formData.append("button", rowId);
+
+            //fetch("/uorderrequest", {
+                //method: "POST",
+                //body: formData
+                //headers: {'Content-Type': 'application/json'},
+                //body: JSON.stringify(formData)
+            //})
+            }
+    </script>
+{% endblock %}

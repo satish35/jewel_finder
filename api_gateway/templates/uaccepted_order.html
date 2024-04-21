@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+    {% with %}  
+        {% if data %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>design</th>
+                    </tr>
+                </thead>
+            {% for message in data %}
+                <tbody>
+                  <tr id="{{ message['_nid'] }}">
+                    <td>
+                        <div style="height: 150px; width: 600px;">
+                            <p>description: {{ message['description'] }}</p>
+                        </div>
+                    </td>
+                    <td><input type="button" value="Pay" onclick="Pay()" /></td>
+                  </tr>
+                </tbody>
+            {% endfor %} 
+            </table>   
+        {% endif %}  
+    {% endwith %}
+{% endblock %}
+{% block scripts %}
+<script>
+    const Pay = () =>{
+        var rowId = event.target.parentNode.parentNode.id;
+        console.log(rowId);
+        // create own form in memory
+        const formData = new FormData();
+
+        // set values in this form
+        formData.append("button", rowId);
+
+        fetch("/uaccepted_order", {
+            method: "POST",
+            body: formData
+            //headers: {'Content-Type': 'application/json'},
+            //body: JSON.stringify(formData)
+        })
+        }
+</script>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "jbase.html" %}
+{% block content %}
+    {% with %}  
+        {% if data %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Button</th>
+                    </tr>
+                </thead>
+            {% for message in data %}
+                <tbody>
+                  <tr id="{{ message['_nid'] }}">
+                    <td>
+                        <div class="card mb-3" style="max-width: 540px;">
+                            <div class="row g-0">
+                              <div class="col-md-4">
+                                <img src="{{ url_for('file', filename=message['photo']) }}" class="img-fluid rounded-start" alt="...">
+                              </div>
+                              <div class="col-md-8">
+                                <div class="card-body">
+                                  <h5 class="card-title">Card title</h5>
+                                  <p class="card-text">Description: {{ message['description'] }}</p>
+                                  <p class="card-text">Location: {{ message['loc'] }}</p>
+                                  <p class="card-text">Making_charges: {{ message['making_charges'] }}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                    </td>
+                    <td><input type="button" value="Done" onclick="Done()" class="btn btn-success" /></td>
+                  </tr>
+                </tbody>
+            {% endfor %} 
+            </table>   
+        {% endif %}  
+    {% endwith %}
+{% endblock %}
+{% block scripts %}
+    <script>
+        const Done = () =>{
+            var rowId = event.target.parentNode.parentNode.id;
+            console.log(rowId);
+            // create own form in memory
+            const formData = new FormData();
+
+            // set values in this form
+            formData.append("button", rowId);
+
+            fetch("/raccepted_order", {
+                method: "POST",
+                body: formData
+                //headers: {'Content-Type': 'application/json'},
+                //body: JSON.stringify(formData)
+            }).then((response) =>{
+                return response.json()
+            }).then((data) =>{
+                window.location.href=data.redirect
+            })
+            }
+    </script>
+{% endblock %}

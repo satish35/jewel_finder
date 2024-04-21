@@ -1,0 +1,25 @@
+
+{% extends "baselogin.html" %}
+{% block content %}
+    <form action = "/retailerlogin" method = "POST"> 
+        <p>Email <input type = "email" name = "email" /></p>  
+        <p>password <input type = "text" name = "password" /></p> 
+        <p><input type = "submit" value = "Submit" /></p> 
+    </form>
+    <p><input type = "submit" value = "register" onclick="register()" /></p>
+{% endblock %}
+{% block scripts %}
+<script>
+    const register = () =>{
+        fetch('/rregister',{
+            method: 'GET'
+        }).then((response) =>{
+            console.log('hi2')
+            return response.text()
+        }).then((html) =>{
+            console.log('hi3')
+            document.body.innerHTML=html
+        })
+    }
+</script>
+{% endblock %}
